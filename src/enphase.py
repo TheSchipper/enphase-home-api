@@ -1,38 +1,31 @@
 import base64
 import requests
-import json
+import logging
+
+from src.configuration import EnphaseConfiguration
 
 ENPHASE_API_URL = "https://api.enphaseenergy.com/api/v4/systems"
 
-
-def _check_configuration_file():
-    """
-
-    :return:
-    """
-    with open("enphase-configuration.json", 'r') as f:
-        return json.loads(f.read())
+logging.basicConfig(filename="log.txt", level=logging.DEBUG,
+                    format='[%(asctime)s %(levelname)s] %(message)s',
+                    datefmt='%Y-%d-%m %H:%M:%S', encoding="utf-8")
 
 
-def _save_refresh_token_locally(refresh_token):
-    with open("enphase-refresh-token", 'w') as f:
-        f.write(refresh_token)
-
-
-def _update_tokens(access_token, refresh_token):
-    with open("enphase-configuration.json", "rw+") as f:
-        contents = json.loads(f.read())
-        contents["ENPHASE_ACCESS_TOKEN"] = access_token
-        contents["ENPHASE_REFRESH_TOKEN"] = refresh_token
-        f.write(contents)
-
-
-class EnphaseAPI:
+class EnphaseAPIClient:
     """
     Simple wrapper for Enphase V4 API
     """
-    def __init__(self, generate_new_access_token=False):
-        configuration = _check_configuration_file()
+    def __init__(self, config_path="enphase-configuration.json"):
+        logging.debug(f"Starting Client. Using file path {config_path}")
+        self._set_local_configuration_values(config_path)
+
+    def _set_local_configuration_values(self, config_path):
+        """
+
+        :return:
+        """
+        local_configuration = EnphaseConfiguration(config_path)
+        configuration = local_configuration.check_configuration_file(config_path)
         self.ho_code = configuration.get("ENPHASE_CODE")
         self.client_id = configuration.get("ENPHASE_CLIENT_ID")
         self.client_secret = configuration.get("ENPHASE_CLIENT_SECRET")
@@ -75,7 +68,6 @@ class EnphaseAPI:
         resp = requests.post(enphase_refresh_token_url, headers=headers)
         resp.raise_for_status()
         return resp.json()['access_token'], resp.json()['refresh_token']
-
 
     def get_enphase_system_information(self):
         """
