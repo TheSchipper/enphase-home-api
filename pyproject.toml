@@ -2,6 +2,9 @@
 name = "enphase-home-api-client"
 version = "0.0.1"
 description = "Enphase API Client"
+authors = [
+    "Schipper <schipper@doggy.wag>",
+]
 
 
 [tool.poetry.dependencies]

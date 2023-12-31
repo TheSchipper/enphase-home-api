@@ -1,13 +1,16 @@
 FROM python:3.9-slim
 
-WORKDIR /app
+# Copy workspace
+WORKDIR /enphase-home-api-client
+COPY . /enphase-home-api-client
 
-COPY . /app
+# Install Curl
+RUN apt-get update && apt-get install curl
 
-RUN apt-get update
-
+# Install Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
+ENV PATH="/root/.local/bin:$PATH"
 
-RUN pip install -r requirements.txt
+RUN poetry install
 
-ENTRYPOINT /usr/local/bin/python3
+ENTRYPOINT /bin/bash
