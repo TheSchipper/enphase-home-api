@@ -5,7 +5,7 @@ WORKDIR /enphase-home-api-client
 COPY . /enphase-home-api-client
 
 # Install Curl
-RUN apt-get update && apt-get install curl
+RUN apt-get update && apt-get install curl -y
 
 # Install Poetry
 RUN curl -sSL https://install.python-poetry.org | python3 -
