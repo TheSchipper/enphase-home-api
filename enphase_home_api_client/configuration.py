@@ -17,7 +17,7 @@ class EnphaseConfiguration:
             return json.loads(f.read())
 
     def update_tokens(self, access_token, refresh_token):
-        with open("enphase-configuration.json", "rw+") as f:
+        with open("../src/enphase-configuration.json", "rw+") as f:
             contents = json.loads(f.read())
             contents["ENPHASE_ACCESS_TOKEN"] = access_token
             contents["ENPHASE_REFRESH_TOKEN"] = refresh_token
