@@ -1,13 +1,18 @@
-[tool.poetry]
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
 name = "enphase-home-api-client"
 version = "0.0.1"
-description = "Enphase API Client"
 authors = [
-    "Schipper <107776081+TheSchipper@users.noreply.github.com>",
+  { name="Sean Humes", email="107776081+TheSchipper@users.noreply.github.com" },
 ]
-packages = [{include = "enphase_home_api_client"}]
-
-
-[tool.poetry.dependencies]
-python = "^3.12"
-requests = "^2.31.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]

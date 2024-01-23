@@ -1,4 +1,8 @@
-### Banner
+<p align="center">
+<img src="banner.png">
+</p>
+<h2 align="center">Enphase home API Client</h2>
+
 ![Static Badge](https://img.shields.io/badge/Python-3.12-blue)
 ![Static Badge](https://img.shields.io/badge/License-MIT-green)
 
