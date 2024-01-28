@@ -4,6 +4,6 @@ FROM python:3.10-slim
 WORKDIR /enphase-home-api-client
 COPY . /enphase-home-api-client
 
-RUN pip install -r requirements.txt
+RUN pip install .
 
-ENTRYPOINT /bin/bash
+ENTRYPOINT ["python"]

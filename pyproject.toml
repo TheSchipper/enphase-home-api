@@ -8,11 +8,15 @@ version = "0.0.1"
 authors = [
   { name="Sean Humes", email="107776081+TheSchipper@users.noreply.github.com" },
 ]
-description = ""
+description = "API Client for Enphase Home systems"
 readme = "README.md"
 requires-python = ">=3.10"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+]
+dependencies = [
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
 ]

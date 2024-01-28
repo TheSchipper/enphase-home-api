@@ -1,4 +1,5 @@
 import base64
+import os
 import requests
 import logging
 
@@ -6,13 +7,7 @@ from enphase_home_api_client.configuration import EnphaseConfiguration
 
 ENPHASE_API_URL = "https://api.enphaseenergy.com/api/v4/systems"
 
-logging.basicConfig(
-    filename="log.txt",
-    level=logging.DEBUG,
-    format="[%(asctime)s %(levelname)s] %(message)s",
-    datefmt="%Y-%d-%m %H:%M:%S",
-    encoding="utf-8",
-)
+logger = logging.getLogger(__name__)
 
 
 class EnphaseAPIClient:
@@ -22,7 +17,14 @@ class EnphaseAPIClient:
 
     def __init__(self, config_path="enphase-configuration.json"):
         logging.debug(f"Starting Client. Using file path {config_path}")
-        self._set_local_configuration_values(config_path)
+        #self._set_local_configuration_values(config_path)
+        self.ho_code = os.environ["ENPHASE_CODE"]
+        self.client_id = os.environ["ENPHASE_CLIENT_ID"]
+        self.client_secret = os.environ["ENPHASE_CLIENT_SECRET"]
+        self.api_key = os.environ["ENPHASE_API_KEY"]
+        self.system_id = os.environ["ENPHASE_SYSTEM_ID"]
+        self.refresh_token = os.environ["ENPHASE_REFRESH_TOKEN"]
+        self.access_token = os.environ["ENPHASE_ACCESS_TOKEN"]
 
     def _set_local_configuration_values(self, config_path):
         """
@@ -68,6 +70,7 @@ class EnphaseAPIClient:
             "https://api.enphaseenergy.com/oauth/token?grant_type=refresh_token"
             f"&refresh_token={self.refresh_token}"
         )
+        logger.debug(f"Refreshing tokens. URL: {enphase_refresh_token_url}")
         self._post_token_request(enphase_refresh_token_url)
 
     def get_enphase_system_information(self):
@@ -78,6 +81,7 @@ class EnphaseAPIClient:
         """
         endpoint = self.system_id
         url = f"{ENPHASE_API_URL}/{endpoint}?key={self.api_key}"
+        logger.debug(f"Getting system information. URL: {url}")
         self._post_request(url)
 
     def get_system_summary_from_enphase(self):
@@ -88,6 +92,7 @@ class EnphaseAPIClient:
         """
         endpoint = "summary"
         url = f"{ENPHASE_API_URL}/{self.system_id}/{endpoint}?key={self.api_key}"
+        logger.debug(f"Getting system summary. URL: {url}")
         self._post_request(url)
 
     def get_system_devices_from_enphase(self):
@@ -98,6 +103,7 @@ class EnphaseAPIClient:
         """
         endpoint = "devices"
         url = f"{ENPHASE_API_URL}/{self.system_id}/{endpoint}?key={self.api_key}"
+        logger.debug(f"Getting system devices. URL: {url}")
         self._post_request(url)
 
     def _post_token_request(self, url):
@@ -119,6 +125,7 @@ class EnphaseAPIClient:
         ).decode("utf-8")
         headers = {"Authorization": f"Basic {basic_auth_token}"}
         resp = requests.post(url, headers=headers)
+        logger.debug(f"Response: {resp.json()}")
         resp.raise_for_status()
         return resp.json()["access_token"], resp.json()["refresh_token"]
 
@@ -136,5 +143,6 @@ class EnphaseAPIClient:
         """
         headers = {"Authorization": f"Bearer {self.access_token}"}
         resp = requests.post(url, headers=headers)
+        logger.debug(f"Response: {resp.json()}")
         resp.raise_for_status()
         return resp.json()
